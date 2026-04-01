@@ -88,10 +88,10 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/itinerari"
+              href="/partenze"
               className="bg-ghana-red text-white font-headline font-bold px-8 py-4 rounded-btn hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-hover"
             >
-              Vedi gli itinerari →
+              Vedi le prossime partenze →
             </Link>
             <Link
               href="/blog"
@@ -251,7 +251,7 @@ export default function Home() {
             Date disponibili tutto l'anno con WeRoad.
           </p>
           <Link
-            href="/itinerari"
+            href="/partenze"
             className="inline-block bg-ghana-red text-white font-headline font-bold px-10 py-5 rounded-btn hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-hover text-lg"
           >
             Scopri le date disponibili →

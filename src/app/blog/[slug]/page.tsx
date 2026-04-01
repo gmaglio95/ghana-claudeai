@@ -9,13 +9,13 @@ const categoriaColore: Record<string, string> = {
   "Volontariato":   "bg-ghana-red text-white",
 };
 
-// Genera i meta tag dinamici per ogni articolo
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const articolo = articles.find((a) => a.slug === params.slug);
+  const { slug } = await params;
+  const articolo = articles.find((a) => a.slug === slug);
   if (!articolo) return {};
   return {
     title: `${articolo.titolo} | Ghana Travel`,
@@ -23,20 +23,19 @@ export async function generateMetadata({
   };
 }
 
-// Pre-genera tutte le rotte statiche
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
 }
 
-export default function ArticoloPage({
+export default async function ArticoloPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const articolo = articles.find((a) => a.slug === params.slug);
+  const { slug } = await params;
+  const articolo = articles.find((a) => a.slug === slug);
   if (!articolo) notFound();
 
-  // Articoli correlati (stessa categoria, escluso quello corrente)
   const correlati = articles
     .filter((a) => a.categoria === articolo.categoria && a.slug !== articolo.slug)
     .slice(0, 3);
@@ -79,7 +78,6 @@ export default function ArticoloPage({
             dangerouslySetInnerHTML={{ __html: articolo.contenuto }}
           />
         ) : (
-          // Placeholder finché non scriviamo i contenuti veri
           <div className="space-y-8">
             <div>
               <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
@@ -95,7 +93,6 @@ export default function ArticoloPage({
               </p>
             </div>
 
-            {/* Immagine 1 */}
             <div className="rounded-img overflow-hidden">
               <Image
                 src={articolo.img}
@@ -145,13 +142,13 @@ export default function ArticoloPage({
             Hai voglia di vivere questa esperienza?
           </p>
           <h3 className="font-headline text-2xl font-bold text-ghana-gold mb-6">
-            Scopri l'itinerario in Ghana su WeRoad
+            Scopri le partenze in Ghana su WeRoad
           </h3>
           <Link
-            href="/itinerari"
+            href="/partenze"
             className="inline-block bg-ghana-red text-white font-headline font-bold px-8 py-4 rounded-btn hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-hover"
           >
-            Vedi le date disponibili →
+            Vedi le prossime partenze disponibili →
           </Link>
         </div>
 

@@ -11,11 +11,16 @@ export async function fetchTours(): Promise<WeRoadTour[]> {
   const response = await fetch("/api/weroad-tours", {
     cache: "no-store",
   });
-
-  if (!response.ok) {
-    throw new Error("Errore nel caricamento degli itinerari");
-  }
-
+  if (!response.ok) throw new Error("Errore nel caricamento degli itinerari");
   const json: WeRoadResponse = await response.json();
   return json.data ?? [];
+}
+
+export async function fetchTravel(): Promise<any> {
+  const response = await fetch("/api/weroad-travel", {
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Errore nel caricamento dell'itinerario");
+  const json = await response.json();
+  return json.data;
 }

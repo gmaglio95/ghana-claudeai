@@ -1,15 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-async function fetchTravel() {
-  const res = await fetch(
-    "/api/weroad-travel",
-    { next: { revalidate: 3600 } }
-  );
-  if (!res.ok) throw new Error("Errore nel caricamento itinerario");
-  const json = await res.json();
-  return json.data;
-}
+import { fetchTravel } from "@/lib/weroad";
 
 function MoodBar({ label, level, max = 5 }: { label: string; level: number; max?: number }) {
   return (
@@ -31,9 +25,9 @@ function MoodBar({ label, level, max = 5 }: { label: string; level: number; max?
 
 function DifficultyBadge({ rating }: { rating: string }) {
   const map: Record<string, { label: string; color: string }> = {
-    LOW:    { label: "🟢 Bassa",   color: "bg-green-900 text-green-300" },
-    MEDIUM: { label: "🟡 Media",   color: "bg-yellow-900 text-yellow-300" },
-    HIGH:   { label: "🔴 Alta",    color: "bg-red-950 text-ghana-red" },
+    LOW:    { label: "🟢 Bassa",  color: "bg-green-900 text-green-300" },
+    MEDIUM: { label: "🟡 Media",  color: "bg-yellow-900 text-yellow-300" },
+    HIGH:   { label: "🔴 Alta",   color: "bg-red-950 text-ghana-red" },
   };
   const d = map[rating] ?? { label: rating, color: "bg-dark-card text-text-secondary" };
   return (
@@ -47,7 +41,6 @@ function StageCard({ stage, index }: { stage: any; index: number }) {
   const img = stage.previewCardImage?.desktop;
   return (
     <div className="flex gap-4 md:gap-6">
-      {/* Timeline */}
       <div className="flex flex-col items-center">
         <div className="w-10 h-10 rounded-full bg-ghana-gold flex items-center justify-center font-headline font-bold text-dark-bg text-sm shrink-0">
           {index + 1}
@@ -55,9 +48,7 @@ function StageCard({ stage, index }: { stage: any; index: number }) {
         <div className="w-0.5 bg-dark-border flex-1 mt-2" />
       </div>
 
-      {/* Card */}
       <div className="bg-dark-card rounded-card border border-dark-border overflow-hidden mb-6 flex-1">
-        {/* Immagine */}
         {img && (
           <div className="relative h-48 md:h-56 overflow-hidden">
             <Image
@@ -85,7 +76,6 @@ function StageCard({ stage, index }: { stage: any; index: number }) {
             </h3>
           )}
 
-          {/* Mood della tappa */}
           <div className="flex flex-wrap gap-3 mb-4">
             {stage.moods.natureLevel > 0 && (
               <span className="text-xs font-body text-text-secondary border border-dark-border px-2 py-0.5 rounded-full">
@@ -109,7 +99,6 @@ function StageCard({ stage, index }: { stage: any; index: number }) {
             )}
           </div>
 
-          {/* SubStages */}
           <div className="space-y-5">
             {stage.subStages.map((sub: any) => (
               <div key={sub.id}>
@@ -118,7 +107,7 @@ function StageCard({ stage, index }: { stage: any; index: number }) {
                 </h4>
                 {sub.description && (
                   <div
-                    className="font-body text-text-secondary text-sm leading-relaxed prose-sm"
+                    className="font-body text-text-secondary text-sm leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: sub.description }}
                   />
                 )}
@@ -154,22 +143,35 @@ function FaqItem({ title, body }: { title: string; body: string }) {
   );
 }
 
-export default async function ItinerarioPage() {
-  let travelData: any = null;
-  let error = false;
+export default function ItinerarioPage() {
+  const [travelData, setTravelData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    travelData = await fetchTravel();
-  } catch {
-    error = true;
+  useEffect(() => {
+    fetchTravel()
+      .then(setTravelData)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 border-4 border-ghana-gold border-t-transparent rounded-full animate-spin" />
+        <p className="font-body text-text-secondary">Caricamento itinerario...</p>
+      </div>
+    );
   }
 
+  // Errore
   if (error || !travelData) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="font-body text-text-secondary text-lg mb-6">
-            Impossibile caricare l'itinerario al momento.
+            {error ?? "Impossibile caricare l'itinerario al momento."}
           </p>
           <Link
             href="https://www.weroad.it/viaggi/ghana-africa-che-si-vive-tra-coste-foreste-e-villaggi/"
@@ -227,7 +229,6 @@ export default async function ItinerarioPage() {
 
         {/* DESCRIZIONE + MOODS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Descrizione */}
           <div className="md:col-span-2">
             <p className="font-body text-ghana-gold text-sm uppercase tracking-widest mb-4">
               Il viaggio
@@ -238,7 +239,6 @@ export default async function ItinerarioPage() {
             />
           </div>
 
-          {/* Mood + Info rapide */}
           <div className="bg-dark-card rounded-card border border-dark-border p-6 h-fit">
             <p className="font-body text-ghana-gold text-xs uppercase tracking-widest mb-5">
               Atmosfera del viaggio
@@ -250,9 +250,12 @@ export default async function ItinerarioPage() {
               <MoodBar label="Storia"  level={travel.moods.historyLevel} />
               <MoodBar label="Party"   level={travel.moods.partyLevel} />
             </div>
-            <div className="border-t border-dark-border pt-4 space-y-2">
+            <div className="border-t border-dark-border pt-4 space-y-3">
               <p className="font-body text-xs text-text-secondary">
-                📅 Prima data: <span className="text-white font-bold">{travel.firstTour?.startingDate ?? "—"}</span>
+                📅 Prima data:{" "}
+                <span className="text-white font-bold">
+                  {travel.firstTour?.startingDate ?? "—"}
+                </span>
               </p>
               <p className="font-body text-xs text-text-secondary">
                 💰 A partire da:{" "}
@@ -265,14 +268,15 @@ export default async function ItinerarioPage() {
                   </span>
                 )}
               </p>
-              <p className="font-body text-xs text-text-secondary">
-                🎯 Difficoltà: <DifficultyBadge rating={travel.physicalRating} />
-              </p>
+              <div className="flex items-center gap-2">
+                <span className="font-body text-xs text-text-secondary">🎯 Difficoltà:</span>
+                <DifficultyBadge rating={travel.physicalRating} />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* MAPPA ITINERARIO */}
+        {/* MAPPA */}
         {mapImg && (
           <div className="mb-16">
             <p className="font-body text-ghana-gold text-sm uppercase tracking-widest mb-6">
@@ -290,7 +294,7 @@ export default async function ItinerarioPage() {
           </div>
         )}
 
-        {/* TAPPE ITINERARIO */}
+        {/* TAPPE */}
         <div className="mb-16">
           <p className="font-body text-ghana-gold text-sm uppercase tracking-widest mb-2">
             Programma giorno per giorno
@@ -305,9 +309,8 @@ export default async function ItinerarioPage() {
           </div>
         </div>
 
-        {/* COSA È INCLUSO */}
+        {/* INCLUSO / NON INCLUSO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {/* Incluso */}
           <div className="bg-dark-card rounded-card border border-dark-border p-6">
             <h3 className="font-headline text-xl font-bold text-ghana-gold mb-5">
               ✅ Cosa è incluso
@@ -325,7 +328,6 @@ export default async function ItinerarioPage() {
             </ul>
           </div>
 
-          {/* Non incluso */}
           <div className="bg-dark-card rounded-card border border-dark-border p-6">
             <h3 className="font-headline text-xl font-bold text-text-secondary mb-5">
               ❌ Non incluso
@@ -340,8 +342,6 @@ export default async function ItinerarioPage() {
                 </li>
               ))}
             </ul>
-
-            {/* Cassa comune */}
             <div className="mt-6 pt-5 border-t border-dark-border">
               <h4 className="font-headline text-base font-bold text-ghana-gold mb-2">
                 💰 Cassa comune

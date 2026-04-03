@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { articles } from "@/data/articles";
+import { ArticleJsonLd } from "@/components/JsonLd";
 
 const categoriaColore: Record<string, string> = {
   "Travel Tips":    "bg-ghana-green text-ghana-gold",
@@ -18,8 +19,22 @@ export async function generateMetadata({
   const articolo = articles.find((a) => a.slug === slug);
   if (!articolo) return {};
   return {
-    title: `${articolo.titolo} | Ghana Travel`,
+    title: articolo.titolo,
     description: articolo.metaDescription,
+    keywords: ["Ghana", "viaggio", "avventura", articolo.categoria, articolo.titolo],
+    openGraph: {
+      title: articolo.titolo,
+      description: articolo.metaDescription,
+      url: `https://ghana-claudeai.vercel.app/blog/${slug}`,
+      type: "article",
+      images: [{ url: articolo.img, width: 800, height: 450, alt: articolo.altImg }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: articolo.titolo,
+      description: articolo.metaDescription,
+      images: [articolo.img],
+    },
   };
 }
 
@@ -42,7 +57,13 @@ export default async function ArticoloPage({
 
   return (
     <div className="min-h-screen">
-
+// subito dentro il return, prima del hero
+<ArticleJsonLd
+  titolo={articolo.titolo}
+  descrizione={articolo.metaDescription}
+  slug={articolo.slug}
+  img={articolo.img}
+/>
       {/* Hero articolo */}
       <div className="relative h-72 md:h-96 overflow-hidden">
         <Image

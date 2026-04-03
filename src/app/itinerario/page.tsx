@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchTravel } from "@/lib/weroad";
+import { TravelJsonLd } from "@/components/JsonLd";
 
 function MoodBar({ label, level, max = 5 }: { label: string; level: number; max?: number }) {
   return (
@@ -193,7 +194,7 @@ export default function ItinerarioPage() {
 
   return (
     <div className="min-h-screen">
-
+      <TravelJsonLd />
       {/* HERO */}
       <section className="relative h-96 md:h-[520px] overflow-hidden">
         {heroImg && (

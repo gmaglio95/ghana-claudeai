@@ -25,11 +25,15 @@ const spaceMono = Space_Mono({
   display: "swap",
 });
 
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://ghana-claudeai.vercel.app"),
   title: {
     default: "Ghana Travel | Viaggia in Ghana con WeRoad",
     template: "%s | Ghana Travel",
+  },
+  verification: {
+    google: "google-site-verification=_7q3GA_iro7dGWQYO7jgil1EnShejFtTBkE9Qj9BNCg",
   },
   description:
     "Scopri il Ghana: cultura autentica, natura selvaggia, spiagge e volontariato. Itinerari di gruppo con WeRoad a partire da €1200. Accra, Cape Coast, Kakum e molto altro.",

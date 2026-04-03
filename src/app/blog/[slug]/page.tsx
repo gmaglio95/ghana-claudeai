@@ -57,7 +57,6 @@ export default async function ArticoloPage({
 
   return (
     <div className="min-h-screen">
-// subito dentro il return, prima del hero
 <ArticleJsonLd
   titolo={articolo.titolo}
   descrizione={articolo.metaDescription}
@@ -93,69 +92,69 @@ export default async function ArticoloPage({
         </p>
 
         {/* Corpo articolo */}
-        {articolo.contenuto ? (
-          <div
-            className="prose prose-invert prose-lg max-w-none font-body"
-            dangerouslySetInnerHTML={{ __html: articolo.contenuto }}
-          />
-        ) : (
-          <div className="space-y-8">
-            <div>
-              <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
-                Un viaggio che inizia dalla curiosità
-              </h2>
-              <p className="font-body text-text-secondary leading-relaxed">
-                Il Ghana è uno di quei posti che ti cambia senza che te ne accorga.
-                Non succede in modo drammatico, non c'è un momento preciso in cui
-                puoi dire "ecco, è qui che è cambiato tutto". Succede lentamente,
-                nei piccoli momenti: una chiacchierata con un venditore di mercato,
-                il rumore dei tamburi che arriva da lontano, un tramonto sulla costa
-                atlantica che tinge tutto di rosso e oro.
-              </p>
-            </div>
+{articolo.contenuto ? (
+  <div
+  className="article-content"
+  dangerouslySetInnerHTML={{ __html: articolo.contenuto }}
+/>
+) : (
+  <div className="space-y-8">
+    <div>
+      <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
+        Un viaggio che inizia dalla curiosità
+      </h2>
+      <p className="font-body text-text-secondary leading-relaxed">
+        Il Ghana è uno di quei posti che ti cambia senza che te ne accorga.
+        Non succede in modo drammatico, non c'è un momento preciso in cui
+        puoi dire "ecco, è qui che è cambiato tutto". Succede lentamente,
+        nei piccoli momenti: una chiacchierata con un venditore di mercato,
+        il rumore dei tamburi che arriva da lontano, un tramonto sulla costa
+        atlantica che tinge tutto di rosso e oro.
+      </p>
+    </div>
 
-            <div className="rounded-img overflow-hidden">
-              <Image
-                src={articolo.img}
-                alt={articolo.altImg}
-                width={800}
-                height={450}
-                className="w-full object-cover"
-              />
-              <p className="font-body text-text-secondary text-sm mt-2 italic">
-                {articolo.altImg}
-              </p>
-            </div>
+    <div className="rounded-img overflow-hidden">
+      <Image
+        src={articolo.img}
+        alt={articolo.altImg}
+        width={800}
+        height={450}
+        className="w-full object-cover"
+      />
+      <p className="font-body text-text-secondary text-sm mt-2 italic">
+        {articolo.altImg}
+      </p>
+    </div>
 
-            <div>
-              <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
-                Perché il Ghana è diverso
-              </h2>
-              <p className="font-body text-text-secondary leading-relaxed">
-                Quello che rende il Ghana unico in Africa occidentale è la sua
-                stabilità politica, la sua apertura ai visitatori e — soprattutto
-                — la sua autenticità. Non è un paese costruito per il turismo.
-                È un paese che vive, che lavora, che celebra, e che ti invita a
-                farne parte. L'accoglienza ghanese non è performativa: è genuina,
-                calda, immediata.
-              </p>
-            </div>
+    <div>
+      <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
+        Perché il Ghana è diverso
+      </h2>
+      <p className="font-body text-text-secondary leading-relaxed">
+        Quello che rende il Ghana unico in Africa occidentale è la sua
+        stabilità politica, la sua apertura ai visitatori e — soprattutto
+        — la sua autenticità. Non è un paese costruito per il turismo.
+        È un paese che vive, che lavora, che celebra, e che ti invita a
+        farne parte. L'accoglienza ghanese non è performativa: è genuina,
+        calda, immediata.
+      </p>
+    </div>
 
-            <div>
-              <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
-                Cosa porta a casa chi ci va
-              </h2>
-              <p className="font-body text-text-secondary leading-relaxed">
-                Chi torna dal Ghana raramente parla solo di posti. Parla di persone.
-                Del ragazzo che li ha aiutati a trovare il mercato giusto, della
-                famiglia che li ha invitati a pranzo, dei bambini che correvano
-                accanto al tro-tro. Il Ghana entra dentro in un modo che pochi
-                altri posti riescono a fare. E questo è esattamente il motivo per
-                cui vale la pena andarci.
-              </p>
-            </div>
-          </div>
-        )}
+    <div>
+      <h2 className="font-headline text-2xl font-bold text-ghana-gold mb-4">
+        Cosa porta a casa chi ci va
+      </h2>
+      <p className="font-body text-text-secondary leading-relaxed">
+        Chi torna dal Ghana raramente parla solo di posti. Parla di persone.
+        Del ragazzo che li ha aiutati a trovare il mercato giusto, della
+        famiglia che li ha invitati a pranzo, dei bambini che correvano
+        accanto al tro-tro. Il Ghana entra dentro in un modo che pochi
+        altri posti riescono a fare. E questo è esattamente il motivo per
+        cui vale la pena andarci.
+      </p>
+    </div>
+  </div>
+)}
 
         {/* CTA WeRoad */}
         <div className="mt-14 bg-ghana-green rounded-card p-8 text-center">
